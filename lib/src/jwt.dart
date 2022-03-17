@@ -188,6 +188,7 @@ class JWT {
     Duration? expiresIn,
     Duration? notBefore,
     DateTime? issuedAt,
+    DateTime? expiresAt,
     bool noIssueAt = false,
   }) {
     try {
@@ -201,7 +202,9 @@ class JWT {
           if (!noIssueAt) {
             payload['iat'] = secondsSinceEpoch(issuedAt ?? DateTime.now());
           }
-          if (expiresIn != null) {
+          if (expiresAt != null) {
+            payload['exp'] = secondsSinceEpoch(expiresAt);
+          } else if (expiresIn != null) {
             payload['exp'] = secondsSinceEpoch(DateTime.now().add(expiresIn));
           }
           if (notBefore != null) {

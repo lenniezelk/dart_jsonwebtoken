@@ -101,8 +101,7 @@ class JWT {
                 !ListEquality().equals(payload['aud'], audience)) {
               throw JWTInvalidError('invalid audience');
             }
-          }
-          else{
+          } else {
             throw JWTInvalidError('invalid audience');
           }
         }
@@ -188,6 +187,7 @@ class JWT {
     JWTAlgorithm algorithm = JWTAlgorithm.HS256,
     Duration? expiresIn,
     Duration? notBefore,
+    DateTime? issuedAt,
     bool noIssueAt = false,
   }) {
     try {
@@ -198,7 +198,9 @@ class JWT {
         try {
           payload = Map<String, dynamic>.from(payload);
 
-          if (!noIssueAt) payload['iat'] = secondsSinceEpoch(DateTime.now());
+          if (!noIssueAt) {
+            payload['iat'] = secondsSinceEpoch(issuedAt ?? DateTime.now());
+          }
           if (expiresIn != null) {
             payload['exp'] = secondsSinceEpoch(DateTime.now().add(expiresIn));
           }
